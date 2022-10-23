@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sharpid</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.8.0/web3.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <input id="data" type="text">
+    <button id="subm">store</button>
+    
+</body>
+
+<script>
+    var contractAddress = "0xd39795a739aa9d937186f4deae41942064fc43ac"  //"0x0d62d5cad77404c93da1ffae8f7777a37a554843";
+    var RPCURL = "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161";
+    var accounts,web3,contract;
+    var contractABI =  [
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "regno",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "dob",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "blood_group",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "phone_number",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "fathers_name",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "mothers_name",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "valid_through",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "dept",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "board",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "issueID",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_recipient",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "_message",
+          "type": "string"
+        }
+      ],
+      "name": "sendMessage",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "readMessage",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "viewID",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "regno",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "dob",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "blood_group",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "phone_number",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "fathers_name",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "mothers_name",
+                  "type": "string"
+                }
+              ],
+              "internalType": "struct Sharpid.personal",
+              "name": "p",
+              "type": "tuple"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "valid_through",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "dept",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "board",
+                  "type": "string"
+                }
+              ],
+              "internalType": "struct Sharpid.college",
+              "name": "c",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct Sharpid.id",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]
+  async function loadBlockchainData() {
+    const web3 = window.web3;
+    const accounts = await web3.eth.getAccounts();
+    console.log(accounts);
+    const account = accounts[0];
+    console.log(account);
+    const balance = await web3.eth.getBalance(account);
+    console.log(balance);
+    const balanceInEther = web3.utils.fromWei(balance, 'ether');
+    console.log(balanceInEther);
+  }
+
+  /*
+  string memory name,uint256 regno,string memory dob,string memory blood_group,uint256 phone_number,
+    string memory fathers_name,string memory mothers_name,uint256 valid_through,
+    string memory dept, string memory board,address addr
+        */
+
+  $("#subm").click(function(){
+    var data = $("#data").val();
+    //contract.methods.store(data).send({from:accounts[0]});
+    //contract.methods.sendMessage("0xE270Da2eaC2B377dC8b4D0A35159682720943D43",data).send({from:accounts[0]});
+    // contract.methods.sendMessage("0xE270Da2eaC2B377dC8b4D0A35159682720943D43",data).send({from:accounts[0]});
+    contract.methods.issueID("praveen",2012064,"24-04-2002","0",9789876543,"praveen","praveen",2022,"cse","board","0xE270Da2eaC2B377dC8b4D0A35159682720943D43").send({from:accounts[0]});
+    });
+
+    const init = async ()=> {
+        if (window.xdc) {
+            window.web3 = new Web3(window.xdc);
+            window.xdc.enable();
+            await loadBlockchainData();
+            accounts = await web3.eth.getAccounts();
+            w3 = new Web3(RPCURL);
+            contract = new web3.eth.Contract(contractABI, contractAddress);
+            contract.methods.viewID().call({from:"0xE270Da2eaC2B377dC8b4D0A35159682720943D43"}).then((result)=>{
+                console.log(result.p.fathersname);
+            })
+            /*contract.methods.retrieve().call().then((result)=>{
+                console.log(result);
+            })*/
+            //contract.methods.store(100).send({from:accounts[0]});
+            // console.log(contract.methods.sendMessage("0xE270Da2eaC2B377dC8b4D0A35159682720943D43", "Hello World!").send({from: "0xE270Da2eaC2B377dC8b4D0A35159682720943D43"}));
+        }else{
+            console.log("Metamask not found");
+        }
+    }
+    init();
+</script>
+
+</html>
